@@ -3,27 +3,29 @@
 int scanf_array(int len, int *array)
 {
     for(int i = 0; i < len; i++)
-        if(!scanf("%d", &array[i]))
+        if(scanf("%d", &array[i]) != 1)
             return 1;
     return 0;
 }
 
-double average(int len, int *array)
+double average_neg_number(int len, int *array)
 {
-    double average_res = 0;
-    int count_minus_number = 0; 
+    int sum_neg_number = 0;
+    int count_neg_number = 0;
+    double average_neg_number_res = 0;
     for (int i = 0; i < len; i++)
     {
         if (array[i] < 0)
         {
-            average_res += array[i];
-            count_minus_number++;
+            sum_neg_number += array[i];
+            count_neg_number++;
         }
     }
-    if (count_minus_number != 0)
-        return average_res / count_minus_number;
-    else
-        return 0;
+
+    if (count_neg_number != 0)
+        average_neg_number_res = (double) sum_neg_number / count_neg_number;
+
+    return average_neg_number_res;
 }
 
 int main(void)
@@ -47,7 +49,7 @@ int main(void)
         return 2;
     }
 
-    printf("Среднее арефметическое отрицательных чисел равно: %lf\n", average(len, array));
+    printf("Среднее арефметическое отрицательных чисел равно: %lf\n", average_neg_number(len, array));
 
     return 0;
 }
