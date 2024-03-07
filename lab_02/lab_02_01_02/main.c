@@ -1,11 +1,13 @@
 #include <stdio.h>
 
-int scanf_array(int len, int *array)
+int scanf_array(int len, int array[])
 {
+    int res = 0;
     for(int i = 0; i < len; i++)
         if(scanf("%d", &array[i]) != 1)
-            return 1;
-    return 0;
+            res = 1;
+
+    return res;
 }
 
 double average_neg_num(int len, int *array)

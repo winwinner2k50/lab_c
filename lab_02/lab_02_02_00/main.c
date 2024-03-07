@@ -1,17 +1,22 @@
 #include <stdio.h>
 
-int scanf_array(int len, int *array)
+int scanf_array(int len, int array[])
 {
+    int res = 0;
     for(int i = 0; i < len; i++)
         if(scanf("%d", &array[i]) != 1)
-            return 1;
-    return 0;
+            res = 1;
+
+    return res;
 }
 
-void out_array(int len, int *array)
+void out_array(int array[], int len)
 {
     for(int i = 0; i < len; i++)
-        printf("%d ", array[i]);
+        if(i + 1 != len)
+            printf("%d ", array[i]);
+        else
+            printf("%d\n", array[i]);
 }
 
 double average(int len, int *array)
@@ -63,7 +68,7 @@ int main(void)
 
     printf("Введите элементы массива\n");
 
-    if(scanf_array(len, array))
+    if(scanf_array(array, len))
     {
         printf("Ошибка ввода элементов\n");
         return 2;
