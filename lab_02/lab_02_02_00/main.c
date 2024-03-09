@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int scanf_array(int len, int array[])
+int scanf_array(int array[], int len)
 {
     int res = 0;
     for(int i = 0; i < len; i++)
@@ -54,7 +54,7 @@ int make_new_array(double average_array, int len, int *array, int *array_new)
 
 int main(void)
 {
-    int array[10], array_new[20];
+    int array[1000], array_new[2000];
     int len, len_new_array;
     double average_array;
     printf("Введите длину массива\n");
@@ -73,9 +73,9 @@ int main(void)
         printf("Ошибка ввода элементов\n");
         return 2;
     }
-    average_array = average(len, array);
+    average_array = average(array, len);
 
     len_new_array = make_new_array(average_array, len, array, array_new);
 
-    out_array(len_new_array, array_new);
+    out_array(array_new, len_new_array);
 }

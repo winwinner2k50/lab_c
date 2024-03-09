@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int scanf_array(int len, int array[])
+int scanf_array(int array[], int len)
 {
     int res = 0;
     for(int i = 0; i < len; i++)
@@ -10,7 +10,7 @@ int scanf_array(int len, int array[])
     return res;
 }
 
-double average_neg_num(int len, int *array)
+double average_neg_num(int array[], int len)
 {
     int sum_neg_num = 0;
     int count_neg_num = 0;
@@ -32,7 +32,7 @@ double average_neg_num(int len, int *array)
 
 int main(void)
 {
-    int array[10];
+    int array[1000];
     int len;
     printf("Введите длину массива\n");
     scanf("%d", &len);
@@ -45,13 +45,13 @@ int main(void)
 
     printf("Введите элементы массива\n");
 
-    if(scanf_array(len, array))
+    if(scanf_array(array, len))
     {
         printf("Ошибка ввода элементов\n");
         return 2;
     }
 
-    printf("Среднее арефметическое отрицательных чисел равно: %lf\n", average_neg_num(len, array));
+    printf("Среднее арефметическое отрицательных чисел равно: %lf\n", average_neg_num(array, len));
 
     return 0;
 }
