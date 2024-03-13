@@ -1,3 +1,5 @@
 *.exe
 *.o
 .vscode
+gen.sh
+q.sh
