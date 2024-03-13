@@ -57,10 +57,10 @@ int main(void)
     int array[1000], array_new[2000];
     int len, len_new_array;
     double average_array;
-    printf("Введите длину массива\n");
-    scanf("%d", &len);
+   printf("Введите длину массива\n");
+    int rm = scanf("%d", &len);
 
-    if(len <= 0)
+    if(rm != 1 || len <= 0)
     {
         printf("Ошибка ввода длины массива\n");
         return 1;

@@ -35,9 +35,9 @@ int main(void)
     int array[1000];
     int len;
     printf("Введите длину массива\n");
-    scanf("%d", &len);
+    int rm = scanf("%d", &len);
 
-    if(len <= 0)
+    if(rm != 1 || len <= 0)
     {
         printf("Ошибка ввода длины массива\n");
         return 1;
