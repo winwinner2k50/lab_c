@@ -2,10 +2,14 @@
 #include <math.h>
 #include <stdlib.h>
 
-int scanf_array(int array[], int len)
+int input_array(int array[], int len)
 {
     int res = 0;
-    for(int i = 0; i < len; i++)
+
+    if (len <= 0)
+        res = 1;
+    
+    for (int i = 0; i < len; i++)
         if(scanf("%d", &array[i]) != 1)
             res = 1;
 
@@ -28,7 +32,6 @@ int is_palindrome(int num)
     int res = 1;
     int num_array_reverse[1000], num_len = 0;
 
-
     while (num > 0)
     {
         num_len++;
@@ -41,33 +44,40 @@ int is_palindrome(int num)
         if(num_array_reverse[i] != num_array_reverse[num_len - 1 - i])
             res = 0;
     }
+
     return res;
 }
 
-int remove_palindrome(int array[], int len)
+int try_remove_palindrome(int array[], int len_old, int *len_new)
 {
-    int j = 0;
-    for(int i = 0; i < len; i++)
+    if(array == NULL)
+        return 1;
+
+    *len_new = 0;
+
+    for(int i = 0; i < len_old; i++)
     {
+       // printf("%d %d\n", array[i], is_palindrome(array[i]));
         if(is_palindrome(array[i]) != 1)
         {
-            j++;
-            array[j - 1] = array[i];
+            (*len_new)++;
+            array[*len_new - 1] = array[i];
         }
     }
 
-    return j;
+    return 0;
 }
 
 int main(void)
 {
     int array[1000];
-    int len;
+    int len, len_new;
 
-   printf("Введите длину массива\n");
-    int rm = scanf("%d", &len);
+    //printf("%d\n", is_palindrome(5))
 
-    if(rm != 1 || len <= 0)
+    printf("Введите длину массива\n");
+
+    if(scanf("%d", &len) != 1 || len <= 0)
     {
         printf("Ошибка ввода длины массива\n");
         return 1;
@@ -75,14 +85,19 @@ int main(void)
 
     printf("Введите элементы массива\n");
 
-    if(scanf_array(array, len))
+    if(input_array(array, len))
     {
         printf("Ошибка ввода элементов\n");
         return 2;
     }
 
-    len = remove_palindrome(array, len);
-
-    out_array(array, len);
-
+    if(try_remove_palindrome(array, len, &len_new) == 0)
+        out_array(array, len_new);
+    else
+    {
+        printf("Ошибка при удалении");
+        return 3;
+    }
+        
+    return 0;
 }

@@ -1,43 +1,55 @@
 #include <stdio.h>
 
-int scanf_array(int array[], int len)
+int input_array(int array[], int len)
 {
     int res = 0;
-    for(int i = 0; i < len; i++)
+
+    if (len <= 0)
+        res = 1;
+    
+    for (int i = 0; i < len; i++)
         if(scanf("%d", &array[i]) != 1)
             res = 1;
 
     return res;
 }
 
-double average_neg_num(int array[], int len)
+int find_negs_average(int array[], int len, double *average_of_negs)
 {
-    int sum_neg_num = 0;
-    int count_neg_num = 0;
-    double average_neg_num_res = 0;
+    if (array == NULL)
+        return 1;
+    
+
+    int sum_negativ = 0;
+    int count_negativ = 0;
+
     for (int i = 0; i < len; i++)
     {
         if (array[i] < 0)
         {
-            sum_neg_num += array[i];
-            count_neg_num++;
+            sum_negativ += array[i];
+            count_negativ++;
         }
     }
 
-    if (count_neg_num != 0)
-        average_neg_num_res = (double) sum_neg_num / count_neg_num;
+    if (count_negativ != 0)
+        *average_of_negs = (double) sum_negativ / count_negativ;
+    else
+        return 2;
 
-    return average_neg_num_res;
+    return 0;
 }
 
 int main(void)
 {
     int array[1000];
     int len;
-    printf("Введите длину массива\n");
-    int rm = scanf("%d", &len);
+    double average_of_negs;
+    int rm;
 
-    if(rm != 1 || len <= 0)
+    printf("Введите длину массива\n");
+
+    if(scanf("%d", &len) != 1 || len <= 0)
     {
         printf("Ошибка ввода длины массива\n");
         return 1;
@@ -45,13 +57,21 @@ int main(void)
 
     printf("Введите элементы массива\n");
 
-    if(scanf_array(array, len))
+    if(input_array(array, len))
     {
         printf("Ошибка ввода элементов\n");
         return 2;
     }
 
-    printf("Среднее арефметическое отрицательных чисел равно: %lf\n", average_neg_num(array, len));
-
+    rm = find_negs_average(array, len, &average_of_negs);
+    if (rm == 0)
+        printf("Среднее арефметическое отрицательных чисел равно: %lf\n", average_of_negs);
+    else
+        if (rm == 2)
+        {
+            printf("Нет отрицательных элементов в массиве\n");
+            return 3;
+        }
+             
     return 0;
 }

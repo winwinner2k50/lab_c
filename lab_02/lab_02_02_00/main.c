@@ -1,9 +1,13 @@
 #include <stdio.h>
 
-int scanf_array(int array[], int len)
+int input_array(int array[], int len)
 {
     int res = 0;
-    for(int i = 0; i < len; i++)
+
+    if (len <= 0)
+        res = 1;
+    
+    for (int i = 0; i < len; i++)
         if(scanf("%d", &array[i]) != 1)
             res = 1;
 
@@ -19,11 +23,13 @@ void out_array(int array[], int len)
             printf("%d\n", array[i]);
 }
 
-double average(int len, int *array)
+int find_average(int array[], int len, double *average)
 {
+    if (array == NULL)
+        return 1;
+    
     int sum_num = 0;
     int count_num = 0;
-    double average_num_res = 0;
     for (int i = 0; i < len; i++)
     {
         sum_num += array[i];
@@ -31,36 +37,49 @@ double average(int len, int *array)
     }
 
     if (count_num != 0)
-        average_num_res = (double) sum_num / count_num;
+        *average = (double) sum_num / count_num;
+    else
+        return 2;
 
-    return average_num_res;
+    return 0;
 }
 
-int make_new_array(double average_array, int len, int *array, int *array_new)
+int try_gen_new_array(int array_old[], int array_new[], int len_old, int *len_new)
 {
-    int len_new = len;
-    for(int i = 0; i < len; i++)
+    double average;
+
+    if(array_old == NULL)
+        return 1;
+
+    if (find_average(array_old, len_old, &average) == 0)
     {
-        array_new[i] = array[i];
-        if(array[i] > average_array)
+        *len_new = len_old;
+        for(int i = 0; i < len_old; i++)
         {
-            array_new[len_new] = array[i];
-            len_new++;
+            array_new[i] = array_old[i];
+            if(array_old[i] > average)
+            {
+                (*len_new)++;
+                array_new[*len_new - 1] = array_old[i];
+            }
         }
     }
+    else
+        return 2;
+        
 
-    return len_new;
+    return 0;
 }
 
 int main(void)
 {
     int array[1000], array_new[2000];
-    int len, len_new_array;
-    double average_array;
-   printf("Введите длину массива\n");
-    int rm = scanf("%d", &len);
 
-    if(rm != 1 || len <= 0)
+    int len, len_new;
+
+    printf("Введите длину массива\n");
+
+    if(scanf("%d", &len) != 1 || len <= 0)
     {
         printf("Ошибка ввода длины массива\n");
         return 1;
@@ -68,14 +87,20 @@ int main(void)
 
     printf("Введите элементы массива\n");
 
-    if(scanf_array(array, len))
+    if(input_array(array, len))
     {
         printf("Ошибка ввода элементов\n");
         return 2;
     }
-    average_array = average(array, len);
 
-    len_new_array = make_new_array(average_array, len, array, array_new);
 
-    out_array(array_new, len_new_array);
+    if(try_gen_new_array(array, array_new, len, &len_new) == 0)
+        out_array(array_new, len_new);
+    else
+    {
+        printf("Ошибка при генираци нового массива");
+        return 3;
+    }
+        
+    return 0;
 }

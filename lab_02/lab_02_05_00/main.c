@@ -17,7 +17,7 @@ int min_multiplication_array(int *pa, int *end_array)
 {
     int min_res = (*pa) * (*(pa + 1));
     pa++;
-    while (pa != end_array)
+    while (pa + 1 != end_array)
     {
         if ((*pa) * (*(pa + 1)) < min_res)
             min_res = (*pa) * (*(pa + 1));

@@ -1,9 +1,13 @@
 #include <stdio.h>
 
-int scanf_array(int array[], int len)
+int input_array(int array[], int len)
 {
     int res = 0;
-    for(int i = 0; i < len; i++)
+
+    if (len <= 0)
+        res = 1;
+    
+    for (int i = 0; i < len; i++)
         if(scanf("%d", &array[i]) != 1)
             res = 1;
 
@@ -19,7 +23,7 @@ void out_array(int array[], int len)
             printf("%d\n", array[i]);
 }
 
-void swap(int array[], int element_first, int element_second)
+void swap_elements_in_array(int array[], int element_first, int element_second)
 {
     int num_first = array[element_first];
     array[element_first] = array[element_second];
@@ -32,12 +36,12 @@ void sort_selection(int array[], int len)
     for(int i = 0; i < len; i++)
     {
         swap_element = i;
-        for(int j = i+1; j < len; j++)
+        for(int j = i + 1; j < len; j++)
         {
             if(array[j] < array[swap_element])
                 swap_element = j;
         }
-        swap(array, swap_element, i);
+        swap_elements_in_array(array, swap_element, i);
     }
 }
 
@@ -59,7 +63,7 @@ int main(void)
 
     printf("Введите элементы массива\n");
 
-    if(scanf_array(array, len))
+    if(input_array(array, len))
     {
         printf("Ошибка ввода элементов\n");
         return 2;
