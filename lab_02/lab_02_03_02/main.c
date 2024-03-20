@@ -16,13 +16,12 @@ int input_array(int array[], int len)
     return res;
 }
 
-void out_array(int array[], int len)
+void output_array(int array[], int len)
 {
     for(int i = 0; i < len; i++)
-        if(i + 1 != len)
-            printf("%d ", array[i]);
-        else
-            printf("%d\n", array[i]);
+        printf("%d ", array[i]);
+        
+    printf("\n");
 }
 
 int is_palindrome(int num)
@@ -30,7 +29,7 @@ int is_palindrome(int num)
     num = abs(num);
 
     int res = 1;
-    int num_array_reverse[1000], num_len = 0;
+    int num_array_reverse[100], num_len = 0;
 
     while (num > 0)
     {
@@ -65,13 +64,17 @@ int try_remove_palindrome(int array[], int len_old, int *len_new)
         }
     }
 
-    return 0;
+    if (len_new == 0)
+        return 2;
+    else
+        return 0;
 }
 
 int main(void)
 {
     int array[1000];
     int len, len_new;
+    int rm;
 
     //printf("%d\n", is_palindrome(5))
 
@@ -90,13 +93,21 @@ int main(void)
         printf("Ошибка ввода элементов\n");
         return 2;
     }
-
-    if(try_remove_palindrome(array, len, &len_new) == 0)
-        out_array(array, len_new);
+    rm = try_remove_palindrome(array, len, &len_new);
+    if(rm == 0)
+        output_array(array, len_new);
     else
     {
-        printf("Ошибка при удалении");
-        return 3;
+        if(rm == 1)
+        {
+            printf("Ошибка при удалении");
+            return 3;
+        }
+        else
+        {
+            printf("Весь массив был удалён");
+            return 4;
+        }         
     }
         
     return 0;

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int scanf_array(int *pa, int *end_array)
+int input_array(int *pa, int *end_array)
 {
     int res = 0;
     while (pa != end_array)
@@ -32,9 +32,8 @@ int main(void)
     int array[1000];
     int len;
     printf("Введите длину массива\n");
-    int rm = scanf("%d", &len);
 
-    if(rm != 1 || len <= 0)
+    if(scanf("%d", &len) != 1 || len <= 0)
     {
         printf("Ошибка ввода длины массива\n");
         return 1;
@@ -42,7 +41,7 @@ int main(void)
 
     printf("Введите элементы массива\n");
 
-    if(scanf_array(array, array + len))
+    if(input_array(array, array + len))
     {
         printf("Ошибка ввода элементов\n");
         return 2;

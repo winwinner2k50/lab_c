@@ -14,13 +14,12 @@ int input_array(int array[], int len)
     return res;
 }
 
-void out_array(int array[], int len)
+void output_array(int array[], int len)
 {
     for(int i = 0; i < len; i++)
-        if(i + 1 != len)
-            printf("%d ", array[i]);
-        else
-            printf("%d\n", array[i]);
+        printf("%d ", array[i]);
+        
+    printf("\n");
 }
 
 int find_average(int array[], int len, double *average)
@@ -95,7 +94,7 @@ int main(void)
 
 
     if(try_gen_new_array(array, array_new, len, &len_new) == 0)
-        out_array(array_new, len_new);
+        output_array(array_new, len_new);
     else
     {
         printf("Ошибка при генираци нового массива");

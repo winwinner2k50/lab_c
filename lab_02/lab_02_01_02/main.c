@@ -19,7 +19,6 @@ int find_negs_average(int array[], int len, double *average_of_negs)
     if (array == NULL)
         return 1;
     
-
     int sum_negativ = 0;
     int count_negativ = 0;
 

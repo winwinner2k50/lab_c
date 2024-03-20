@@ -14,13 +14,12 @@ int input_array(int array[], int len)
     return res;
 }
 
-void out_array(int array[], int len)
+void output_array(int array[], int len)
 {
     for(int i = 0; i < len; i++)
-        if(i + 1 != len)
-            printf("%d ", array[i]);
-        else
-            printf("%d\n", array[i]);
+        printf("%d ", array[i]);
+        
+    printf("\n");
 }
 
 void swap_elements_in_array(int array[], int element_first, int element_second)
@@ -70,5 +69,5 @@ int main(void)
     }
 
     sort_selection(array, len);
-    out_array(array, len);
+    output_array(array, len);
 }
