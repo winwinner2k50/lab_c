@@ -1,14 +1,14 @@
 #include <stdio.h>
-#include "helper.h"
+#include "matrix_io.h"
 
 int main(void)
 {
     int a[LEN][LEN];
-    int n, m;
+    size_t n, m;
 
     printf("Введите количество строк и столбцов в матрице\n");
 
-    if (scanf("%d%d", &n, &m) != 2 || n <= 0 || m <= 0)
+    if (scanf("%zu%zu", &n, &m) != 2 || n <= 0 || m <= 0)
     {
         printf("Ошибка ввода размера матрицы\n");
         return ERROR_INPUT;
@@ -22,7 +22,7 @@ int main(void)
         return ERROR_INPUT_MATRIX;
     }
     
-    replase_matrix(a, n, m);
+    replace_ell_matrix(a, n, m);
 
     printf("Изменённая матрица\n");
     out_matrix(a, n, m);
