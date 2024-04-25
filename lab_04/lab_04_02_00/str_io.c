@@ -4,7 +4,7 @@
 
 #include "str_io.h"
 
-void arr_str_output(char arr_str[][LEN], int arr_count_words[], size_t n)
+void arr_str_output(char arr_str[][LEN_WORD], int arr_count_words[], size_t n)
 {
     for (size_t i = 0; i < n; i++)
     {
@@ -14,7 +14,7 @@ void arr_str_output(char arr_str[][LEN], int arr_count_words[], size_t n)
         
 }
 
-int word_in_arr(char arr_words[][LEN], char word[], size_t len_word, size_t arr_words_len, size_t *word_posit)
+int word_in_arr(char arr_words[][LEN_WORD], char word[], size_t len_word, size_t arr_words_len, size_t *word_posit)
 {
     int res = 0;
     for (size_t i = 0; i < arr_words_len; i++)
@@ -28,7 +28,7 @@ int word_in_arr(char arr_words[][LEN], char word[], size_t len_word, size_t arr_
     return res;
 }
 
-void try_past_word(char arr_words[][LEN], int arr_count_words[], size_t *arr_words_len, char word[], size_t len_word)
+void try_past_word(char arr_words[][LEN_WORD], int arr_count_words[], size_t *arr_words_len, char word[], size_t len_word)
 {
     size_t word_posit;
     if (!word_in_arr(arr_words, word, len_word, *arr_words_len, &word_posit))
@@ -43,19 +43,26 @@ void try_past_word(char arr_words[][LEN], int arr_count_words[], size_t *arr_wor
     }
 }
 
-size_t count_words(char arr_words[][LEN], int arr_count_words[], char s[], size_t len_s)
+int try_find_words(char arr_words[][LEN_WORD], size_t *arr_words_len,  int arr_count_words[], char s[], size_t len_s)
 {
-    size_t arr_words_len = 0;
+    int res = 0;
+    *arr_words_len = 0;
 
     char word[LEN];
     size_t len_word = 0;
 
     for (size_t i = 0; i < len_s; i++)
     {
-        if (ispunct(s[i]) || s[i] == '\n')
+        if (ispunct(s[i]) || isspace(s[i]) || s[i] == '\n')
         {
             if (len_word != 0)
-                try_past_word(arr_words, arr_count_words, &arr_words_len, word, len_word); 
+            {
+                if (len_word > 16)
+                    res = 1;
+                else
+                    try_past_word(arr_words, arr_count_words, &arr_words_len, word, len_word);
+                 
+            } 
             len_word = 0;
         }
         else
@@ -64,7 +71,7 @@ size_t count_words(char arr_words[][LEN], int arr_count_words[], char s[], size_
             word[len_word - 1] = s[i];
         }
     }
-    return arr_words_len;
+    return res;
 }
 
 

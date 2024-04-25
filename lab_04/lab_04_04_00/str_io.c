@@ -13,7 +13,7 @@ void words_output(char arr_words[][LEN], size_t arr_words_len)
 }
 
 
-void past_num(char arr_nums[][LEN], size_t *arr_nuns_len, char num[], size_t len_num)
+void past_word(char arr_nums[][LEN], size_t *arr_nuns_len, char num[], size_t len_num)
 {
     (*arr_nuns_len)++;
     strncpy(arr_nums[(*arr_nuns_len) - 1], num, len_num);   
@@ -30,7 +30,7 @@ size_t count_nums(char arr_nums[][LEN], char s[], size_t len_s)
     {
         if (s[i] == '.' || i + 1 == len_s)
         {
-            past_num(arr_nums, &arr_words_len, num, len_num);
+            past_word(arr_nums, &arr_words_len, num, len_num);
             len_num = 0;
         }
         else

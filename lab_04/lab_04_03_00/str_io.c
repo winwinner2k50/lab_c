@@ -4,7 +4,6 @@
 
 #include "str_io.h"
 
-
 void words_output(char arr_words[][LEN], size_t arr_words_len)
 {
     for (size_t i = 0; i < arr_words_len; i++)
@@ -26,7 +25,7 @@ int word_in_arr(char arr_words[][LEN], char word[], size_t len_word, size_t arr_
 }
 */
 
-void past_num(char arr_words[][LEN], size_t *arr_words_len, char word[], size_t len_word)
+void past_word(char arr_words[][LEN], size_t *arr_words_len, char word[], size_t len_word)
 {
     (*arr_words_len)++;
     strncpy(arr_words[(*arr_words_len) - 1], word, len_word);   
@@ -41,10 +40,10 @@ size_t count_nums(char arr_words[][LEN], char s[], size_t len_s)
 
     for (size_t i = 0; i < len_s; i++)
     {
-        if (isspace(s[i]))
+        if (ispunct(s[i]) || isspace(s[i]) || s[i] == '\n')
         {
            // str_output(word, len_word);
-            past_num(arr_words, &arr_words_len, word, len_word);
+            past_word(arr_words, &arr_words_len, word, len_word);
             len_word = 0;
         }
         else
