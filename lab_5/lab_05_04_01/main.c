@@ -7,8 +7,8 @@
 int main(void)
 {
     srand(time(NULL));
-    students_input("q.bin", 5);
+    students_input("q.bin", 3);
     students_output("q.bin");
-    students_dell("q.txt");
+    student_sort("q.txt");
     students_output("q.bin");
 }

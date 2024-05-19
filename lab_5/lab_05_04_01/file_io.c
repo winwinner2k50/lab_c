@@ -5,6 +5,17 @@
 #include <unistd.h>
 #include "file_io.h"
 
+size_t file_count_el(FILE *f)
+{
+    struct student a;
+    size_t res = 0;
+    fseek(f, 0, SEEK_SET);
+    while (fread(&a, sizeof(struct student), 1, f) == 1)
+        res++;
+    fseek(f, 0, SEEK_SET);
+    return res;
+}
+
 struct student get_student_by_pos(FILE *f, size_t pos)
 {
     fseek(f, pos * sizeof(struct student), SEEK_SET);
@@ -43,7 +54,6 @@ void str_input(char s[], size_t n)
             s[i++] = ch;
     s[i] = '\0';
 }
-
 
 void arr_output(unsigned int a[], size_t n)
 {
@@ -86,7 +96,6 @@ void students_input(char file_name[20], size_t n)
     }
     fclose(f);
 }
-
 
 double average_assessments(unsigned int a[])
 {
@@ -151,7 +160,7 @@ void students_dell(char file_name[20])
     printf("%lf\n", average);
     struct student a;
     fseek(f, 0, SEEK_SET);
-    for (size_t i = 0;  fread(&a, sizeof(struct student), 1, f) == 1; i++)
+    for (size_t i = 0; fread(&a, sizeof(struct student), 1, f) == 1; i++)
     {
         if (average_assessments(a.assessments) < average)
         {
@@ -167,5 +176,25 @@ void students_dell(char file_name[20])
         }
             
     }
+    fclose(f);
+}
+
+void student_sort(char file_name[FILE_NAME_LEN])
+{
+    FILE *f = fopen(file_name, "r+b");
+    size_t n = file_count_el(f);
+    for (size_t i = 1; i < n; i++)
+        for (size_t j = 0; j < n - i; j++)
+        {
+            struct student st1 = get_student_by_pos(f, j);
+            struct student st2 = get_student_by_pos(f, j + 1);
+            if (strcoll(st1.surname, st2.surname) > 0)
+                file_swap(f, j, j + 1);
+            else 
+                if (strcoll(st1.surname, st2.surname) == 0)
+                    if (strcoll(st1.name, st2.name) > 0)
+                        file_swap(f, j, j + 1);
+        }
+    
     fclose(f);
 }
