@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include "file_io.h"
+
+struct student get_student_by_pos(FILE *f, size_t pos)
+{
+    fseek(f, pos * sizeof(struct student), SEEK_SET);
+    struct student el;
+    fread(&el, sizeof(struct student), 1, f);
+    return el;
+}
+
+void put_student_by_pos(FILE *f, size_t pos, struct student el)
+{
+    fseek(f, sizeof(struct student) * pos, SEEK_SET);
+    fwrite(&el, sizeof(struct student), 1, f);
+}
+
+void file_swap(FILE *f, size_t i, size_t j)
+{
+    struct student a = get_student_by_pos(f, i);
+    put_student_by_pos(f, i, get_student_by_pos(f, j));
+    put_student_by_pos(f, j, a);
+}
+
+void arr_input(unsigned int a[], size_t n)
+{
+    for (size_t i = 0; i < n; i++)
+        scanf("%u", &a[i]);
+    char bl;
+    scanf("%c", &bl);
+}
+
+void str_input(char s[], size_t n)
+{
+    int ch;
+    size_t i = 0;
+    while ((ch = getchar()) != '\n' && ch != EOF)
+        if (i < n - 1)
+            s[i++] = ch;
+    s[i] = '\0';
+}
+
+
+void arr_output(unsigned int a[], size_t n)
+{
+    for (size_t i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+}
+
+void students_output(char file_name[20])
+{
+    
+    printf("\n");
+    FILE *f = fopen(file_name, "rb");
+    struct student a;
+    rewind(f);
+    for (size_t i = 0; fread(&a, sizeof(struct student), 1, f) == 1; i++)
+    {
+        //printf("%zu\n",ftell(f));
+        //fseek(f, sizeof(struct student) * i, SEEK_SET);
+        printf("%s %s\n", a.name, a.surname);
+        arr_output(a.assessments, 4);
+    }
+    fclose(f);
+}
+
+void students_input(char file_name[20], size_t n)
+{
+    FILE *f = fopen(file_name, "wb");
+    rewind(f);
+    for (size_t i = 0; i < n; i++)
+    {
+        struct student a;
+        printf("имя: ");
+        str_input(a.name, NAME_LEN);
+        printf("фамилия: ");
+        str_input(a.surname, SURNAME_LEN);
+        arr_input(a.assessments, 4);
+        fwrite(&a, sizeof(struct student), 1, f);
+        
+    }
+    fclose(f);
+}
+
+
+double average_assessments(unsigned int a[])
+{
+    double res = 0;
+    for (size_t i = 0; i < ASSESSMENTS_COUNT; i++)
+        res += a[i];
+    return res / 4.0;
+}
+
+double student_average_all_lesson(FILE *f)
+{
+    double res = 0;
+    int count_num = 0;
+    struct student a;
+    for (; fread(&a, sizeof(struct student), 1, f) == 1; count_num++)
+    {
+        //fseek(f, sizeof(struct student) * count_num, SEEK_SET);
+        res += average_assessments(a.assessments);
+    }
+    res /= count_num;
+    return res;
+}
+
+void student_dell(FILE *f,size_t pos)
+{
+    fseek(f, (pos + 1) * sizeof(struct student), SEEK_SET);
+    struct student a;
+    pos++;
+    for (; fread(&a, sizeof(struct student), 1, f) == 1; pos++)
+    {
+        file_swap(f, pos, pos - 1);
+        fseek(f, (pos + 1) * sizeof(struct student), SEEK_SET);
+    }
+    int fd = fileno(f);
+    ftruncate(fd, (pos - 1) * sizeof(struct student));
+}
+
+void students_dell(char file_name[20])
+{
+    FILE *f = fopen(file_name, "r+b");
+    double average = student_average_all_lesson(f);
+    printf("%lf\n", average);
+    struct student a;
+    fseek(f, 0, SEEK_SET);
+    for (size_t i = 0;  fread(&a, sizeof(struct student), 1, f) == 1; i++)
+    {
+        if (average_assessments(a.assessments) < average)
+        {
+            student_dell(f, i);
+            fseek(f, (i + 1) * sizeof(struct student), SEEK_SET);
+            printf("ok: %s\n", a.name);
+        }
+            
+    }
+}
+
+
+
+
+
+
+
+
