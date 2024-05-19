@@ -96,6 +96,27 @@ double average_assessments(unsigned int a[])
     return res / 4.0;
 }
 
+void file_dell_last_el(char file_name[20], size_t n)
+{
+    FILE *f = fopen(file_name, "rb");
+    FILE *f2 = fopen("temp.txt", "wb");
+    struct student a;
+    for (size_t i = 0; i < n && fread(&a, sizeof(struct student), 1, f) == 1; i++)
+    {
+        fwrite(&a, sizeof(struct student), 1, f2);
+    }
+    fclose(f);
+    fclose(f2);
+    f = fopen(file_name, "wb");
+    f2 = fopen("temp.txt", "rb");
+    for (size_t i = 0; i < n && fread(&a, sizeof(struct student), 1, f2) == 1; i++)
+    {
+        fwrite(&a, sizeof(struct student), 1, f);
+    }
+    remove("temp.txt");
+    fclose(f);
+}
+
 double student_average_all_lesson(FILE *f)
 {
     double res = 0;
@@ -110,7 +131,7 @@ double student_average_all_lesson(FILE *f)
     return res;
 }
 
-void student_dell(FILE *f,size_t pos)
+size_t student_dell(FILE *f,size_t pos)
 {
     fseek(f, (pos + 1) * sizeof(struct student), SEEK_SET);
     struct student a;
@@ -120,8 +141,7 @@ void student_dell(FILE *f,size_t pos)
         file_swap(f, pos, pos - 1);
         fseek(f, (pos + 1) * sizeof(struct student), SEEK_SET);
     }
-    int fd = fileno(f);
-    ftruncate(fd, (pos - 1) * sizeof(struct student));
+    return pos - 1;
 }
 
 void students_dell(char file_name[20])
@@ -135,18 +155,17 @@ void students_dell(char file_name[20])
     {
         if (average_assessments(a.assessments) < average)
         {
-            student_dell(f, i);
-            fseek(f, (i + 1) * sizeof(struct student), SEEK_SET);
-            printf("ok: %s\n", a.name);
+            size_t file_new_len = student_dell(f, i);
+            file_dell_last_el(file_name, file_new_len);
+            fclose(f);
+            //students_output(file_name);
+           // printf("--------------\n");
+            FILE *f = fopen(file_name, "r+b");
+            fseek(f, i * sizeof(struct student), SEEK_SET);
+            i--;
+           // printf("ok: %s\n", a.name);
         }
             
     }
+    fclose(f);
 }
-
-
-
-
-
-
-
-
