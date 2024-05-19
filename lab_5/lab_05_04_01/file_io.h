@@ -23,3 +23,5 @@ void students_output(char file_name[20]);
 void students_dell(char file_name[20]);
 
 void student_sort(char file_name[FILE_NAME_LEN]);
+
+void student_find(char file_name[FILE_NAME_LEN], char subs[]);

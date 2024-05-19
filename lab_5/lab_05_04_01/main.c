@@ -9,6 +9,6 @@ int main(void)
     srand(time(NULL));
     students_input("q.bin", 3);
     students_output("q.bin");
-    student_sort("q.txt");
-    students_output("q.bin");
+    student_find("q.txt", "qw");
+    students_output("tmp.bin");
 }

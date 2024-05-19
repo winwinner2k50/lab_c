@@ -198,3 +198,35 @@ void student_sort(char file_name[FILE_NAME_LEN])
     
     fclose(f);
 }
+
+int substring_in_str(char s[], char subs[])
+{
+    if (strlen(subs) > strlen(s))
+        return 0;
+    size_t i;
+    for (i = 0; s[i] != '\0' && subs[i] != '\0'; i++)
+    {
+        if (s[i] != subs[i])
+            return 0;
+    }
+    return 1;
+}
+
+void student_find(char file_name[FILE_NAME_LEN], char subs[])
+{
+    FILE *f = fopen(file_name, "rb");
+    FILE *f2 = fopen("tmp.bin", "wb");
+    size_t n = file_count_el(f);
+    for (size_t i = 0; i < n; i++)
+    {
+        struct student a = get_student_by_pos(f, i);
+        if (substring_in_str(a.surname, subs))
+        {
+            fwrite(&a, sizeof(struct student), 1, f2);
+            printf("ok");
+        }
+            
+    }
+    fclose(f);
+    fclose(f2);
+}
