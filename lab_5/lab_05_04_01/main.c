@@ -5,18 +5,29 @@
 #include "file_io.h"
 
 int main(int argc, char **argv)
-{
-    if (argc == 0)
-    {
-        printf("ERROR");
-        return 1;
-    }
-        
+{    
     if (strcmp(argv[1], "sb") == 0)
     {
-        student_sort(argv[2]);
+        if (argc != 3)
+            return ERROR_ARGS;
+        if (student_sort(argv[2]))
+            return ERROR_FILE;
     }
 
 
-        
+    if (strcmp(argv[1], "fb") == 0)
+    {
+        if (argc != 5)
+            return ERROR_ARGS;
+        if (student_find(argv[2], argv[3], argv[4]))
+            return ERROR_FILE;
+    }
+
+    if (strcmp(argv[1], "sb") == 0)
+    {
+        if (argc != 3)
+            return ERROR_ARGS;
+        if (students_dell(argv[2]))
+            return ERROR_FILE;
+    }    
 }
