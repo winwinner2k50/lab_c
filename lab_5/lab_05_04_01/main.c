@@ -14,7 +14,6 @@ int main(int argc, char **argv)
             return ERROR_FILE;
     }
 
-
     if (strcmp(argv[1], "fb") == 0)
     {
         if (argc != 5)
@@ -29,5 +28,11 @@ int main(int argc, char **argv)
             return ERROR_ARGS;
         if (students_dell(argv[2]))
             return ERROR_FILE;
-    }    
+    }
+
+    if (strcmp(argv[1], "p") == 0)
+        students_output(argv[2]);
+
+    if (strcmp(argv[1], "g") == 0)
+        students_input(argv[2]);
 }
