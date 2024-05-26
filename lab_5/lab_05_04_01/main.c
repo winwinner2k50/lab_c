@@ -4,11 +4,19 @@
 #include <stdlib.h>
 #include "file_io.h"
 
-int main(void)
+int main(int argc, char **argv)
 {
-    srand(time(NULL));
-    students_input("q.bin", 3);
-    students_output("q.bin");
-    student_find("q.txt", "qw");
-    students_output("tmp.bin");
+    if (argc == 0)
+    {
+        printf("ERROR");
+        return 1;
+    }
+        
+    if (strcmp(argv[1], "sb") == 0)
+    {
+        student_sort(argv[2]);
+    }
+
+
+        
 }

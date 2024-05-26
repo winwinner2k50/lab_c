@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include "file_io.h"
 
+
 size_t file_count_el(FILE *f)
 {
     struct student a;
@@ -16,12 +17,13 @@ size_t file_count_el(FILE *f)
     return res;
 }
 
-struct student get_student_by_pos(FILE *f, size_t pos)
+int get_student_by_pos(struct student *st, FILE *f, size_t pos)
 {
     fseek(f, pos * sizeof(struct student), SEEK_SET);
-    struct student el;
-    fread(&el, sizeof(struct student), 1, f);
-    return el;
+    int res = fread(st, sizeof(struct student), 1, f);
+    if (res == 1)
+        return 0;
+    return 1;
 }
 
 void put_student_by_pos(FILE *f, size_t pos, struct student el)
@@ -32,8 +34,12 @@ void put_student_by_pos(FILE *f, size_t pos, struct student el)
 
 void file_swap(FILE *f, size_t i, size_t j)
 {
-    struct student a = get_student_by_pos(f, i);
-    put_student_by_pos(f, i, get_student_by_pos(f, j));
+    
+    struct student a;
+    get_student_by_pos(&a, f, i);
+    struct student b;
+    get_student_by_pos(&b, f, j);
+    put_student_by_pos(f, i, b);
     put_student_by_pos(f, j, a);
 }
 
@@ -64,17 +70,16 @@ void arr_output(unsigned int a[], size_t n)
 
 void students_output(char file_name[20])
 {
-    
     printf("\n");
     FILE *f = fopen(file_name, "rb");
-    struct student a;
+    struct student st;
     rewind(f);
-    for (size_t i = 0; fread(&a, sizeof(struct student), 1, f) == 1; i++)
+    for (size_t i = 0; fread(&st, sizeof(struct student), 1, f) == 1; i++)
     {
         //printf("%zu\n",ftell(f));
         //fseek(f, sizeof(struct student) * i, SEEK_SET);
-        printf("%s %s\n", a.name, a.surname);
-        arr_output(a.assessments, 4);
+        printf("%s %s\n", st.name, st.surname);
+        arr_output(st.assessments, 4);
     }
     fclose(f);
 }
@@ -82,17 +87,15 @@ void students_output(char file_name[20])
 void students_input(char file_name[20], size_t n)
 {
     FILE *f = fopen(file_name, "wb");
-    rewind(f);
     for (size_t i = 0; i < n; i++)
     {
-        struct student a;
+        struct student st;
         printf("имя: ");
-        str_input(a.name, NAME_LEN);
+        str_input(st.name, NAME_LEN);
         printf("фамилия: ");
-        str_input(a.surname, SURNAME_LEN);
-        arr_input(a.assessments, 4);
-        fwrite(&a, sizeof(struct student), 1, f);
-        
+        str_input(st.surname, SURNAME_LEN);
+        arr_input(st.assessments, 4);
+        fwrite(&st, sizeof(struct student), 1, f);
     }
     fclose(f);
 }
@@ -109,18 +112,21 @@ void file_dell_last_el(char file_name[20], size_t n)
 {
     FILE *f = fopen(file_name, "rb");
     FILE *f2 = fopen("temp.txt", "wb");
-    struct student a;
-    for (size_t i = 0; i < n && fread(&a, sizeof(struct student), 1, f) == 1; i++)
+    struct student st;
+
+    for (size_t i = 0; i < n; i++)
     {
-        fwrite(&a, sizeof(struct student), 1, f2);
+        get_student_by_pos(&st, f, i);
+        fwrite(&st, sizeof(struct student), 1, f2);
     }
     fclose(f);
     fclose(f2);
     f = fopen(file_name, "wb");
     f2 = fopen("temp.txt", "rb");
-    for (size_t i = 0; i < n && fread(&a, sizeof(struct student), 1, f2) == 1; i++)
+    for (size_t i = 0; i < n; i++)
     {
-        fwrite(&a, sizeof(struct student), 1, f);
+        get_student_by_pos(&st, f2, i);
+        fwrite(&st, sizeof(struct student), 1, f);
     }
     remove("temp.txt");
     fclose(f);
@@ -129,12 +135,14 @@ void file_dell_last_el(char file_name[20], size_t n)
 double student_average_all_lesson(FILE *f)
 {
     double res = 0;
-    int count_num = 0;
-    struct student a;
-    for (; fread(&a, sizeof(struct student), 1, f) == 1; count_num++)
+    int count_num;
+    struct student st;
+    size_t n = file_count_el(f);
+    for (count_num = 0; count_num < (int)n; count_num++)
     {
+        get_student_by_pos(&st, f, count_num);
         //fseek(f, sizeof(struct student) * count_num, SEEK_SET);
-        res += average_assessments(a.assessments);
+        res += average_assessments(st.assessments);
     }
     res /= count_num;
     return res;
@@ -143,9 +151,9 @@ double student_average_all_lesson(FILE *f)
 size_t student_dell(FILE *f,size_t pos)
 {
     fseek(f, (pos + 1) * sizeof(struct student), SEEK_SET);
-    struct student a;
+    struct student st;
     pos++;
-    for (; fread(&a, sizeof(struct student), 1, f) == 1; pos++)
+    for (; fread(&st, sizeof(struct student), 1, f) == 1; pos++)
     {
         file_swap(f, pos, pos - 1);
         fseek(f, (pos + 1) * sizeof(struct student), SEEK_SET);
@@ -157,12 +165,16 @@ void students_dell(char file_name[20])
 {
     FILE *f = fopen(file_name, "r+b");
     double average = student_average_all_lesson(f);
+
     printf("%lf\n", average);
-    struct student a;
+    struct student st;
+
     fseek(f, 0, SEEK_SET);
-    for (size_t i = 0; fread(&a, sizeof(struct student), 1, f) == 1; i++)
+    size_t n = file_count_el(f);
+    for (size_t i = 0; i < n; i++)
     {
-        if (average_assessments(a.assessments) < average)
+        get_student_by_pos(&st, f, i);
+        if (average_assessments(st.assessments) < average)
         {
             size_t file_new_len = student_dell(f, i);
             file_dell_last_el(file_name, file_new_len);
@@ -186,8 +198,11 @@ void student_sort(char file_name[FILE_NAME_LEN])
     for (size_t i = 1; i < n; i++)
         for (size_t j = 0; j < n - i; j++)
         {
-            struct student st1 = get_student_by_pos(f, j);
-            struct student st2 = get_student_by_pos(f, j + 1);
+            struct student st1;
+            get_student_by_pos(&st1, f, j);
+
+            struct student st2;
+            get_student_by_pos(&st2, f, j + 1);
             if (strcoll(st1.surname, st2.surname) > 0)
                 file_swap(f, j, j + 1);
             else 
@@ -214,16 +229,17 @@ int substring_in_str(char s[], char subs[])
 
 void student_find(char file_name[FILE_NAME_LEN], char subs[])
 {
+    
     FILE *f = fopen(file_name, "rb");
     FILE *f2 = fopen("tmp.bin", "wb");
     size_t n = file_count_el(f);
     for (size_t i = 0; i < n; i++)
     {
-        struct student a = get_student_by_pos(f, i);
-        if (substring_in_str(a.surname, subs))
+        struct student st;
+        get_student_by_pos(&st, f, i);
+        if (substring_in_str(st.surname, subs))
         {
-            fwrite(&a, sizeof(struct student), 1, f2);
-            printf("ok");
+            fwrite(&st, sizeof(struct student), 1, f2);
         }
             
     }

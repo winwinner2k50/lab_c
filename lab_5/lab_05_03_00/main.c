@@ -3,32 +3,31 @@
 #include <time.h>
 #include <stdlib.h>
 #include "file_io.h"
-int main(void)
+int main(int argc, char **argv)
 {
-    srand(time(NULL));
-    FILE *f = fopen("q.txt", "wb");
-    file_gen(f, 5);
-    fclose(f);
+    if (argc < 3)
+    {
+        return 1;
+    }
+        
+    if (strcmp(argv[1], "p") == 0)
+    {
+        FILE *f = fopen(argv[2], "r");
+        file_output_el(f);
+    }
 
-    f = fopen("q.txt", "rb");
-    file_output_el(f);
-    fclose(f);
+    if (strcmp(argv[1], "s") == 0)
+    {
+        FILE *f = fopen(argv[2], "r+");
+        file_sort_el(f);
+    }
 
-    f = fopen("q.txt", "rb");
-    printf("\n%d\n",get_number_by_pos(f, 0));
-    fclose(f);
-
-    f = fopen("q.txt", "r+b");
-    //file_sort_el(f, 5);
-    fclose(f);
-
-    printf("\n");
-    f = fopen("q.txt", "rb");
-    fseek(f, 0, SEEK_SET);
-    file_output_el(f);
-    fclose(f);
-
-
-
+    if (strcmp(argv[1], "c") == 0)
+    {
+        if (argc < 4)
+            return 1;
+        FILE *f = fopen(argv[3], "w");
+        file_gen(f, atoi(argv[2]));
+    }
     return 0;
 }
