@@ -68,7 +68,7 @@ void arr_output(unsigned int a[], size_t n)
     printf("\n");
 }
 
-void students_output(char file_name[20])
+void students_output(char file_name[])
 {
     printf("\n");
     FILE *f = fopen(file_name, "rb");
@@ -78,13 +78,13 @@ void students_output(char file_name[20])
     {
         //printf("%zu\n",ftell(f));
         //fseek(f, sizeof(struct student) * i, SEEK_SET);
-        printf("%s %s\n", st.name, st.surname);
+        printf("%s %s\n", st.surname, st.name);
         arr_output(st.assessments, 4);
     }
     fclose(f);
 }
 
-void students_input(char file_name[20], size_t n)
+void students_input(char file_name[], size_t n)
 {
     FILE *f = fopen(file_name, "wb");
     for (size_t i = 0; i < n; i++)
@@ -165,8 +165,6 @@ int students_dell(char file_name[20])
 {
     FILE *f = fopen(file_name, "r+b");
     double average = student_average_all_lesson(f);
-
-    printf("%lf\n", average);
     struct student st;
 
     fseek(f, 0, SEEK_SET);
@@ -193,7 +191,7 @@ int students_dell(char file_name[20])
     return 0;
 }
 
-int student_sort(char file_name[FILE_NAME_LEN])
+int student_sort(char file_name[])
 {
     FILE *f = fopen(file_name, "r+b");
     size_t n = file_count_el(f);
@@ -232,7 +230,7 @@ int substring_in_str(char s[], char subs[])
     return 1;
 }
 
-int student_find(char file_new_name[FILE_NAME_LEN], char file_name[FILE_NAME_LEN], char subs[])
+int student_find(char file_name[], char file_new_name[], char subs[])
 {
     
     FILE *f = fopen(file_name, "rb");
@@ -253,3 +251,108 @@ int student_find(char file_new_name[FILE_NAME_LEN], char file_name[FILE_NAME_LEN
     fclose(f2);
     return 0;
 }
+
+void file_arr_output(FILE *f, unsigned int a[], size_t n)
+{
+    for (size_t i = 0; i < n; i++)
+        fprintf(f, "%u ", a[i]);
+}
+
+int file_export(char file_bin_name[], char file_txt_name[])
+{
+    FILE *f_bin = fopen(file_bin_name, "rb");
+    FILE *f_txt = fopen(file_txt_name, "w");
+    size_t n = file_count_el(f_bin);
+    for (size_t i = 0; i < n; i++)
+    {
+        struct student st;
+        if(get_student_by_pos(&st, f_bin, i))
+            return 1;
+        fprintf(f_txt, "%s\n%s\n", st.surname, st.name);
+        file_arr_output(f_txt, st.assessments, ASSESSMENTS_COUNT);
+        fprintf(f_txt, "\n");
+    }
+    fclose(f_bin);
+    fclose(f_txt);
+    return 0;
+}
+
+int file_arr_input(unsigned int a[], size_t n, FILE *f)
+{
+    for (size_t i = 0; i < n; i++)
+    {
+        if(fscanf(f, "%u", &a[i]) != 1)
+            return 1;
+            
+    }
+    return 0;
+}
+
+int file_import(char file_txt_name[], char file_bin_name[])
+{
+    FILE *f_bin = fopen(file_bin_name, "wb");
+    FILE *f_txt = fopen(file_txt_name, "r");
+    size_t i = 0;
+    struct student st;
+    while(fgets(st.surname, SURNAME_LEN, f_txt) != NULL && fgets(st.name, NAME_LEN, f_txt) != NULL && file_arr_input(st.assessments, ASSESSMENTS_COUNT, f_txt) == 0)
+    {
+        st.name[strlen(st.name) - 1] = '\0';
+        st.surname[strlen(st.surname) - 1] = '\0';
+        i++;
+        printf("%s %s|\n", st.surname, st.name);
+        put_student_by_pos(f_bin, i - 1, st);
+        fgets(st.surname, SURNAME_LEN, f_txt);
+    }
+    if (i == 0)
+        return 1;
+    fclose(f_bin);
+    fclose(f_txt);
+    return 0;
+
+}
+
+int read_line(char s[], size_t str_size, FILE *f)
+{
+    if (!fgets(s, str_size, f))
+        return 1;
+    char *ch;
+    if ((ch = strchr(s, '\n')) != NULL)
+    {
+        *ch = '\0';
+        return 0;
+    }
+    return 2;
+}
+
+// int file_import(char file_txt_name[], char file_bin_name[])
+// {
+//     FILE *f_txt = fopen(file_txt_name, "r");
+//     FILE *f_bin = fopen(file_bin_name, "wb");
+//     size_t i = 0;
+//     struct student st;
+//     // char name[NAME_LEN];
+//     char surname[SURNAME_LEN];
+//     int rm_surname = read_line(surname, SURNAME_LEN, f_txt);
+//     // int rm_name = read_line(name, NAME_LEN, f_txt);
+
+    
+    
+//     while (rm_surname == 0)
+//     {
+//         printf("|%s|\n", surname);
+//         //i++;
+//        // put_student_by_pos(f_bin, i - 1, st);
+        
+//         rm_surname = read_line(surname, SURNAME_LEN, f_txt);
+//         // rm_name = read_line(name, NAME_LEN, f_txt);
+        
+//        // int rm_assessments = file_arr_input(st.assessments, ASSESSMENTS_COUNT, f_txt);
+        
+        
+//         //fgets(st.surname, SURNAME_LEN, f_txt);
+//     }
+//     if (i - 1 == 0)
+//         return 1;
+//     return 0;
+    
+// }
