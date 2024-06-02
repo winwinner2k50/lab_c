@@ -3,8 +3,8 @@
 #define STR_MAX 30
 
 #define OK
-#define SURNAME_LEN 25
-#define NAME_LEN 10
+#define SURNAME_LEN 27
+#define NAME_LEN 12
 #define ASSESSMENTS_COUNT 4
 #define FILE_NAME_LEN 20
 
@@ -14,8 +14,8 @@
 
 struct student
 {
-    char surname[STR_MAX];
-    char name[STR_MAX];
+    char surname[SURNAME_LEN];
+    char name[NAME_LEN];
     uint32_t assessments[ASSESSMENTS_COUNT];
 };
 
