@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdint.h>
+#define STR_MAX 30
 
 #define OK
 #define SURNAME_LEN 25
@@ -12,9 +14,9 @@
 
 struct student
 {
-    char surname[SURNAME_LEN + 1];
-    char name[NAME_LEN + 1];
-    unsigned int assessments[ASSESSMENTS_COUNT];
+    char surname[STR_MAX];
+    char name[STR_MAX];
+    uint32_t assessments[ASSESSMENTS_COUNT];
 };
 
 void students_input(char file_name[], size_t n);

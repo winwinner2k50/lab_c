@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 #include "file_io.h"
 
 
@@ -43,7 +44,7 @@ void file_swap(FILE *f, size_t i, size_t j)
     put_student_by_pos(f, j, a);
 }
 
-void arr_input(unsigned int a[], size_t n)
+void arr_input(uint32_t a[], size_t n)
 {
     for (size_t i = 0; i < n; i++)
         scanf("%u", &a[i]);
@@ -61,7 +62,7 @@ void str_input(char s[], size_t n)
     s[i] = '\0';
 }
 
-void arr_output(unsigned int a[], size_t n)
+void arr_output(uint32_t a[], size_t n)
 {
     for (size_t i = 0; i < n; i++)
         printf("%d ", a[i]);
@@ -100,7 +101,7 @@ void students_input(char file_name[], size_t n)
     fclose(f);
 }
 
-double average_assessments(unsigned int a[])
+double average_assessments(uint32_t a[])
 {
     double res = 0;
     for (size_t i = 0; i < ASSESSMENTS_COUNT; i++)
@@ -252,7 +253,7 @@ int student_find(char file_name[], char file_new_name[], char subs[])
     return 0;
 }
 
-void file_arr_output(FILE *f, unsigned int a[], size_t n)
+void file_arr_output(FILE *f, uint32_t a[], size_t n)
 {
     for (size_t i = 0; i < n; i++)
         fprintf(f, "%u ", a[i]);
@@ -277,13 +278,12 @@ int file_export(char file_bin_name[], char file_txt_name[])
     return 0;
 }
 
-int file_arr_input(unsigned int a[], size_t n, FILE *f)
+int file_arr_input(uint32_t a[], size_t n, FILE *f)
 {
     for (size_t i = 0; i < n; i++)
     {
         if(fscanf(f, "%u", &a[i]) != 1)
-            return 1;
-            
+            return 1; 
     }
     return 0;
 }
@@ -294,12 +294,16 @@ int file_import(char file_txt_name[], char file_bin_name[])
     FILE *f_txt = fopen(file_txt_name, "r");
     size_t i = 0;
     struct student st;
-    while(fgets(st.surname, SURNAME_LEN, f_txt) != NULL && fgets(st.name, NAME_LEN, f_txt) != NULL && file_arr_input(st.assessments, ASSESSMENTS_COUNT, f_txt) == 0)
+    while(fgets(st.surname, STR_MAX, f_txt) != NULL && fgets(st.name, STR_MAX, f_txt) != NULL && file_arr_input(st.assessments, ASSESSMENTS_COUNT, f_txt) == 0)
     {
         st.name[strlen(st.name) - 1] = '\0';
         st.surname[strlen(st.surname) - 1] = '\0';
+        if (strlen(st.name) > NAME_LEN)
+            break;
+        if (strlen(st.surname) > SURNAME_LEN)
+            break;
         i++;
-        printf("%s %s|\n", st.surname, st.name);
+
         put_student_by_pos(f_bin, i - 1, st);
         fgets(st.surname, SURNAME_LEN, f_txt);
     }
@@ -311,18 +315,18 @@ int file_import(char file_txt_name[], char file_bin_name[])
 
 }
 
-int read_line(char s[], size_t str_size, FILE *f)
-{
-    if (!fgets(s, str_size, f))
-        return 1;
-    char *ch;
-    if ((ch = strchr(s, '\n')) != NULL)
-    {
-        *ch = '\0';
-        return 0;
-    }
-    return 2;
-}
+// int read_line(char s[], size_t str_size, FILE *f)
+// {
+//     if (!fgets(s, str_size, f))
+//         return 1;
+//     char *ch;
+//     if ((ch = strchr(s, '\n')) != NULL)
+//     {
+//         *ch = '\0';
+//         return 0;
+//     }
+//     return 2;
+// }
 
 // int file_import(char file_txt_name[], char file_bin_name[])
 // {
