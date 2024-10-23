@@ -1,39 +1,48 @@
-out_dir := out
-src_dir := src
-inc_dir := inc
-unit_tests := unit_tests
-unit_inc := unit_inc
-
 CC := gcc
 CFLAGS := -std=c99 -Werror
-CFLAGS1 := -std=c99 -Werror -lcheck  -lcheck -lsubunit -lrt -lm -lpthread
+CFLAGS_TEST := -std=c99 -Werror -lcheck -lsubunit -lrt -lm -lpthread
 
-FILE := $(shell find ./$(src_dir) -name "*.c")
-FILE_CHECK := $(shell find ./$(unit_tests) -name "*.c")
-OBJS := $(patsubst ./$(src_dir)/%.c,$(out_dir)/%.o,$(FILE))
+dir_out_default := out
+dir_funcs_default := src
+dir_headers_default := inc
 
-OBJS_NOT_MAIN := $(patsubst ./$(src_dir)/%.c,$(out_dir)/%.o,$(filter-out %main.c,$(FILE)))
-OBJS_CHECK := $(patsubst ./$(unit_tests)/%.c,$(out_dir)/%.o,$(FILE_CHECK))
+dir_out_check := out_check
+dir_funcs_check := unit_tests
+dir_headers_check := unit_inc
 
-HEADERS := $(shell find ./$(inc_dir) -name "*.h")
-HEADERS_CHECK := $(shell find ./$(unit_inc) -name "*.h")
+FILE_FUNCS_DEFAULT := $(shell find ./$(dir_funcs_default) -name "*.c")
+FILE_FUNCS_CHECK := $(shell find ./$(dir_funcs_check) -name "*.c")
+# переписать через wildcard
 
-app.exe : $(OBJS)
-	mkdir -p $(out_dir)
-	$(CC) $(OBJS) -o app.exe
+FILE_MAIN := $(dir_funcs_default)/main.c
 
-unit_tests.exe : $(OBJS_NOT_MAIN) $(OBJS_CHECK) $(HEADERS) 
-	mkdir -p $(out_dir)
-	$(CC) $^ -o $@ $(CFLAGS1) $(HEADERS_CHECK)
+OBJS_FUNCS_DEFAULT :=  $(dir_out_default)/arr.o $(dir_out_default)/mysort.o $(dir_out_default)/key.o
+OBJS_MAIN_DEFAULT := $(dir_out_default)/main.o
+OBJS_CHECK := $(patsubst ./$(dir_funcs_check)/%.c,$(dir_out_check)/%.o,$(FILE_FUNCS_CHECK))
 
-$(out_dir)/check_%.o : $(unit_tests)/check_%.c $(inc_dir)/*.h $(unit_inc)/*.h
-	mkdir -p $(out_dir)
-	$(CC) $(CFLAGS) -I $(inc_dir) -I $(unit_inc) -c $< -o $@
+HEADERS := inc/arr.h inc/key.h inc/mysort.h
+HEADERS_CHECK := $(shell find ./$(dir_headers_check) -name "*.h")
 
-$(out_dir)/%.o: $(src_dir)/%.c $(inc_dir)/*.h
-	mkdir -p $(out_dir)
-	$(CC) $(CFLAGS) -I $(inc_dir) -c $< -o $@
+app.exe : $(dir_out_default) $(OBJS_FUNCS_DEFAULT) $(OBJS_MAIN_DEFAULT) 
+	$(CC) $(CFLAGS) $(OBJS_MAIN_DEFAULT) $(OBJS_FUNCS_DEFAULT) -o $@
 
-clean :0
+unit_tests.exe : $(dir_out_default) $(dir_out_check) $(OBJS_FUNCS_DEFAULT) $(OBJS_CHECK) $(HEADERS) $(HEADERS_CHECK) 
+	$(CC) $(OBJS_FUNCS_DEFAULT) $(OBJS_CHECK) $(HEADERS) $(HEADERS_CHECK) -o $@ $(CFLAGS_TEST) $(HEADERS_CHECK)
+
+$(dir_out_default) :
+	mkdir -p $(dir_out_default)
+
+$(dir_out_check) :
+	mkdir -p $(dir_out_check)
+
+$(dir_out_check)/check_%.o : $(dir_funcs_check)/check_%.c $(dir_headers_check)/*.h $(OBJS_FUNCS_DEFAULT) $(HEADERS)
+	$(CC) $(CFLAGS) -I $(dir_headers_default) -I $(dir_headers_check) -c $< -o $@
+
+$(dir_out_default)/%.o : $(dir_funcs_default)/%.c $(dir_headers_default)/*.h
+	$(CC) $(CFLAGS) -I $(dir_headers_default) -c $< -o $@
+
+clean :
 	rm -f ./*.exe ./*.gcov ./*.gcda ./*.o ./*.gcno ./*.out ./*tmp*
 	rm -rf .idea
+
+.PHOHY : clean

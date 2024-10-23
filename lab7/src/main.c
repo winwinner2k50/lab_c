@@ -25,7 +25,8 @@ int main(void)
     key(a, a_end, &filter, &filter_end);
     
     arr_output_int(filter, filter_end);
-    mysort(filter, sizeof(int), filter_end - filter, comparator_int); // возможно переданно не то значение второго параметра
+    
+    mysort(filter, sizeof(int), filter_end - filter, comparator_int); // возможно переданно не то значение третьего параметра
     arr_output_int(filter, filter_end);
     free(a);
     free(filter);

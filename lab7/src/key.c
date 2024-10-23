@@ -7,7 +7,7 @@
 int *arr_find_max(const int *a, const int *a_end)
 {
     const int *max = a;
-    while (a < a_end)
+    while (a <= a_end)
     {
         if (*max < *a)
             max = a;
@@ -19,7 +19,7 @@ int *arr_find_max(const int *a, const int *a_end)
 int *arr_find_min(const int *a, const int *a_end)
 {
     const int *min = a;
-    while (a < a_end)
+    while (a <= a_end)
     {
         if (*min > *a)
             min = a;
@@ -41,8 +41,6 @@ int key(const int *a, const int *a_end, int **b, int **b_end)
 {
     int *pos1 = arr_find_min(a, a_end);
     int *pos2 = arr_find_max(a, a_end);
-
-    
 
     if (pos1 > pos2)
         swap_any(&pos1, &pos2, sizeof(&pos2));

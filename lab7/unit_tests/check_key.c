@@ -6,10 +6,10 @@
 START_TEST(neg1)
 {
     size_t n = 2;
-    int a[] = {3, -1};
+    int a[] = {2, -1};
     int *b = NULL, *b_end = NULL;
 
-    int res = key(a, a + n, &b, &b_end);
+    int res = key(a, a + n - 1, &b, &b_end);
 
     ck_assert_int_eq(res, ERROR_NOT_DATA);
 
@@ -20,13 +20,13 @@ END_TEST
 START_TEST(pos1)
 {
     size_t n = 3;
-    int a[] = {3, 1 -1};
+    int a[] = {3, 1, -1};
     int *b = NULL, *b_end = NULL;
 
     int res_arr[] = {1};
     int m = 1;
-    
-    int res = key(a, a + n, &b, &b_end);
+
+    int res = key(a, a + n - 1, &b, &b_end);
 
     ck_assert_int_eq(res, 0);
 
@@ -47,16 +47,14 @@ END_TEST
 
 START_TEST(pos2)
 {
-    size_t n = 15;
+    size_t n = 14;
     int a[] = {-1, -2, -3, -4, 1, 2, 3, 4, 4, 0, 4, 4, -4, -4};
     int *b = NULL, *b_end = NULL;
 
     int res_arr[] = {1, 2, 3};
     int m = 3;
     
-    int res = key(a, a + n, &b, &b_end);
-
-    arr_output_int(b, b_end);
+    int res = key(a, a + n - 1, &b, &b_end);
 
     ck_assert_int_eq(res, 0);
 
