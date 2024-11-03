@@ -47,13 +47,13 @@ int matrix_from_file(char ***lins, size_t *n, size_t *m, size_t tips_size, char 
     return 0;
 }
 
-int matrix_output(char **lins, size_t n, size_t m, size_t tips_size)
+int matrix_output(char **lins, size_t n, size_t m, size_t tips_size, void (f_output)(char*))
 {
     for (size_t i = 0; i < n; i++)
     {
         for(size_t j = 0; j < m; j++)
         {
-            num_output_int(((lins)[i] + j * tips_size));
+            f_output(((lins)[i] + j * tips_size));
             printf(" ");
         }
           

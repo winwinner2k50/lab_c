@@ -13,7 +13,7 @@ int main(void)
     char **lins;
 
     matrix_from_file(&lins, &n, &m, sizeof(int), file_name, num_input_int);
-    matrix_output(lins, n, m, sizeof(int));
+    matrix_output(lins, n, m, sizeof(int), num_output_int);
 
     matrix_clear(&lins, n);
     return 0;

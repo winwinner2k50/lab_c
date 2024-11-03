@@ -6,6 +6,8 @@ int matrix_from_file(char ***lins, size_t *n, size_t *m, size_t tips_size, char 
 
 int matrix_clear(char ***lins, size_t n);
 
-int matrix_output(char **lins, size_t n, size_t m, size_t tips_size);
+int matrix_output(char **lins, size_t n, size_t m, size_t tips_size, void (f_output)(char*));
 
 int num_input_int(char *pos, FILE *f);
+
+void num_output_int(char *pos);
