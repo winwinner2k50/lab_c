@@ -5,34 +5,34 @@
 
 #include "matrix.h"
 
-int num_input_int(char *pos)
+int num_input_int(void *pos)
 {
     return scanf("%d", (int*)(pos));
 }
 
-void num_output_int(char *pos)
+void num_output_int(void *pos)
 {
     printf("%d", *((int*)pos));
 }
 
-int num_input_from_file_int(char *pos, FILE *f)
+int num_input_from_file_int(void *pos, FILE *f)
 {
     return fscanf(f, "%d", (int*)(pos));
 }
 
 //double
 
-int num_input_double(char *pos)
+int num_input_double(void *pos)
 {
     return scanf("%lf", (double*)(pos));
 }
 
-void num_output_double(char *pos)
+void num_output_double(void *pos)
 {
     printf("%lf", *((double*)pos));
 }
 
-int num_input_from_file_double(char *pos, FILE *f)
+int num_input_from_file_double(void *pos, FILE *f)
 {
     double a;
     fscanf(f, "%lf", &a);
@@ -76,7 +76,7 @@ int num_input_from_file_double(char *pos, FILE *f)
 // }
 
 
-int matrix_input(char ***lins, size_t n, size_t m, size_t tips_size, int (f_input)(char*))
+int matrix_input(void ***lins, size_t n, size_t m, size_t tips_size, int (f_input)(void*))
 {
     (*lins) = malloc(n * sizeof(char*));
     
@@ -90,7 +90,7 @@ int matrix_input(char ***lins, size_t n, size_t m, size_t tips_size, int (f_inpu
     return 0;
 }
 
-void matrix_output(char **lins, size_t n, size_t m, size_t tips_size, void (f_output)(char*))
+void matrix_output(void **lins, size_t n, size_t m, size_t tips_size, void (f_output)(void*))
 {
     for (size_t i = 0; i < n; i++)
     {
@@ -104,7 +104,7 @@ void matrix_output(char **lins, size_t n, size_t m, size_t tips_size, void (f_ou
     }
 }
 
-int matrix_clear(char ***lins, size_t n)
+int matrix_clear(void ***lins, size_t n)
 {
     for (size_t i = 0; i < n; i++)
         free((*lins)[i]);
