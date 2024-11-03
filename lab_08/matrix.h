@@ -6,12 +6,14 @@ int matrix_from_file(char ***lins, size_t *n, size_t *m, size_t tips_size, char 
 
 int matrix_clear(char ***lins, size_t n);
 
-int matrix_output(char **lins, size_t n, size_t m, size_t tips_size, void (f_output)(char*));
+void matrix_output(char **lins, size_t n, size_t m, size_t tips_size, void (f_output)(char*));
 
-int num_input_int(char *pos, FILE *f);
+int matrix_input(char ***lins, size_t n, size_t m, size_t tips_size, int (f_input)(char*));
+
+int num_input_int(char *pos);
 
 void num_output_int(char *pos);
 
-int num_input_double(char *pos, FILE *f);
+int num_input_double(char *pos);
 
 void num_output_double(char *pos);

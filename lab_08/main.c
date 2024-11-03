@@ -7,13 +7,15 @@
 
 int main(void)
 {
-    char file_name[FILE_NAME_LEN];
-    size_t n, m;
-    printf("Введите имя файла:\n");
-    scanf("%s", file_name);
     char **lins;
+    size_t n, m;
+    
+    printf("Введите n m\n");
+    scanf("%zu%zu", &n, &m);
 
-    matrix_from_file(&lins, &n, &m, sizeof(double), file_name, num_input_double);
+    printf("Введите матрицу\n");
+    matrix_input(&lins, n, m, sizeof(double), num_input_double);
+    
     matrix_output(lins, n, m, sizeof(double), num_output_double);
 
     matrix_clear(&lins, n);
