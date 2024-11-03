@@ -7,13 +7,14 @@
 
 int main(void)
 {
-    char file_name[] = "a.txt";
+    char file_name[FILE_NAME_LEN];
     size_t n, m;
-
+    printf("Введите имя файла:\n");
+    scanf("%s", file_name);
     char **lins;
 
-    matrix_from_file(&lins, &n, &m, sizeof(int), file_name, num_input_int);
-    matrix_output(lins, n, m, sizeof(int), num_output_int);
+    matrix_from_file(&lins, &n, &m, sizeof(double), file_name, num_input_double);
+    matrix_output(lins, n, m, sizeof(double), num_output_double);
 
     matrix_clear(&lins, n);
     return 0;

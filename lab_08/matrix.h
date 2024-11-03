@@ -11,3 +11,7 @@ int matrix_output(char **lins, size_t n, size_t m, size_t tips_size, void (f_out
 int num_input_int(char *pos, FILE *f);
 
 void num_output_int(char *pos);
+
+int num_input_double(char *pos, FILE *f);
+
+void num_output_double(char *pos);
