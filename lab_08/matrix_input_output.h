@@ -6,8 +6,6 @@ int matrix_input(void ***lins, size_t n, size_t m, size_t tips_size, int (f_inpu
 
 void matrix_output(void **lins, size_t n, size_t m, size_t tips_size, void (f_output)(void*));
 
-int matrix_clear(void ***lins, size_t n);
-
 int num_input_int(void *pos);
 
 void num_output_int(void *pos);

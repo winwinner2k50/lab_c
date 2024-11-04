@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stddef.h>
 
-#include "matrix.h"
+#include "matrix_input_output.h"
 
 int num_input_int(void *pos)
 {
@@ -15,10 +15,10 @@ void num_output_int(void *pos)
     printf("%d", *((int*)pos));
 }
 
-int num_input_from_file_int(void *pos, FILE *f)
-{
-    return fscanf(f, "%d", (int*)(pos));
-}
+// int num_input_from_file_int(void *pos, FILE *f)
+// {
+//     return fscanf(f, "%d", (int*)(pos));
+// }
 
 //double
 
@@ -32,13 +32,13 @@ void num_output_double(void *pos)
     printf("%lf", *((double*)pos));
 }
 
-int num_input_from_file_double(void *pos, FILE *f)
-{
-    double a;
-    fscanf(f, "%lf", &a);
-    *(double*)(pos) = a;
-    return 0;
-}
+// int num_input_from_file_double(void *pos, FILE *f)
+// {
+//     double a;
+//     fscanf(f, "%lf", &a);
+//     *(double*)(pos) = a;
+//     return 0;
+// }
 
 
 
@@ -76,27 +76,27 @@ int num_input_from_file_double(void *pos, FILE *f)
 // }
 
 
-int matrix_input(void ***lins, size_t n, size_t m, size_t tips_size, int (f_input)(void*))
+int matrix_input(void ***lins, size_t n, size_t m, size_t type_size, int (f_input)(void*))
 {
     (*lins) = malloc(n * sizeof(char*));
     
     for (size_t i = 0; i < n; i++)
     {
-        (*lins)[i] = malloc(m * tips_size);
+        (*lins)[i] = malloc(m * type_size);
         
         for(size_t j = 0; j < m; j++)
-            f_input(((*lins)[i] + j * tips_size));
+            f_input(((char*)(*lins)[i] + j * type_size));
     }
     return 0;
 }
 
-void matrix_output(void **lins, size_t n, size_t m, size_t tips_size, void (f_output)(void*))
+void matrix_output(void **lins, size_t n, size_t m, size_t type_size, void (f_output)(void*))
 {
     for (size_t i = 0; i < n; i++)
     {
         for(size_t j = 0; j < m; j++)
         {
-            f_output(((lins)[i] + j * tips_size));
+            f_output(((char*)(lins)[i] + j * type_size));
             printf(" ");
         }
 
@@ -104,10 +104,3 @@ void matrix_output(void **lins, size_t n, size_t m, size_t tips_size, void (f_ou
     }
 }
 
-int matrix_clear(void ***lins, size_t n)
-{
-    for (size_t i = 0; i < n; i++)
-        free((*lins)[i]);
-    free(*lins);
-    return 0;
-}
