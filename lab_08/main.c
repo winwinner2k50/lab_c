@@ -20,7 +20,7 @@ int main(void)
     printf("Введите матрицу\n");
     matrix_input(&a, n, m, sizeof(double), num_input_double);
 
-    matrix_dell_something_with_el(&a, &n, &m, sizeof(double), num_max_double, matrix_dell_col);
+    matrix_square_with_dell(&a, &n, &m, sizeof(double), num_min_double);
 
     matrix_output(a, n, m, sizeof(double), num_output_double);
 
