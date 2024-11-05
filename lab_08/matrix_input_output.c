@@ -15,12 +15,6 @@ void num_output_int(void *pos)
     printf("%d", *((int*)pos));
 }
 
-// int num_input_from_file_int(void *pos, FILE *f)
-// {
-//     return fscanf(f, "%d", (int*)(pos));
-// }
-
-//double
 
 int num_input_double(void *pos)
 {
@@ -32,51 +26,31 @@ void num_output_double(void *pos)
     printf("%lf", *((double*)pos));
 }
 
-// int num_input_from_file_double(void *pos, FILE *f)
-// {
-//     double a;
-//     fscanf(f, "%lf", &a);
-//     *(double*)(pos) = a;
-//     return 0;
-// }
+void num_double(void *num, double value)
+{
+    *(double*)num = value;
+}
 
 
 
-
-// int matrix_from_file(char ***lins, size_t *n, size_t *m, size_t tips_size, char file_name[], int (f_input)(char*, FILE*))
-// {
-//     FILE *f = fopen(file_name, "r");
-
-//     if (f == NULL)
-//         return ERROR_FILE_INPUT_NULL;
-    
-//     (*n) = 0;
-//     (*m) = 0;
-
-//     if(fscanf(f, "%zu%zu", n, m) != 2)
-//     {
-//         fclose(f);
-//         return ERROR_READ_FIRST_LINE;
-//     }
-    
-//     (*lins) = malloc((*n) * sizeof(char*));
-    
-//     for (size_t i = 0; i < *n; i++)
-//     {
-//         (*lins)[i] = malloc((*m) * tips_size);
+int matrix_unit_gen(void ***lins, size_t n, size_t m, size_t type_size, void (num_make)(void*, double))
+{
+    (*lins) = malloc(n * sizeof(char*));
+    for (size_t i = 0; i < n; i++)
+    {
+        (*lins)[i] = malloc(m * type_size);
         
-//         for(size_t j = 0; j < *m; j++)
-//             f_input(((*lins)[i] + j * tips_size), f);
-//     }
-
-
-   
-//     fclose(f);
-//     return 0;
-// }
-
-
-
+        for(size_t j = 0; j < m; j++)
+        {
+             if (j == i)
+                num_make(((char*)(*lins)[i] + j * type_size), 1);
+            else
+                num_make(((char*)(*lins)[i] + j * type_size), 0);
+        }
+           
+    }
+    return 0;
+}
 
 int matrix_input(void ***lins, size_t n, size_t m, size_t type_size, int (f_input)(void*))
 {

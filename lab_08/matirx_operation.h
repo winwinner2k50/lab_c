@@ -26,4 +26,14 @@ int matrix_clear(void ***lins, size_t n);
 
 int matrixes_equal_size(void ***a, size_t *n, size_t *m, void ***b, size_t *p, size_t *q, size_t type_size, void (add_col)(void***, size_t*, size_t*, size_t), void (add_str)(void***, size_t*, size_t*, size_t));
 
+int matrixes_multiply(void **a, void **b, void ***res,
+                      size_t n,
+                      size_t type_size,
+                      void (multiply)(void*, void*, void**),
+                      void (sum)(void*, void*, void*),
+                      void (num_make)(void*, double));
+
+void sum_double(void *a, void *b, void *res);
+
 void matrix_magnification(void ***lins, size_t *n, size_t *m, size_t type_size, size_t number_operations, void (add_col)(void***, size_t*, size_t*, size_t), void (add_str)(void***, size_t*, size_t*, size_t));
+
