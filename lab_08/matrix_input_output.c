@@ -76,6 +76,8 @@ void num_output_double(void *pos)
 // }
 
 
+
+
 int matrix_input(void ***lins, size_t n, size_t m, size_t type_size, int (f_input)(void*))
 {
     (*lins) = malloc(n * sizeof(char*));
@@ -89,6 +91,7 @@ int matrix_input(void ***lins, size_t n, size_t m, size_t type_size, int (f_inpu
     }
     return 0;
 }
+
 
 void matrix_output(void **lins, size_t n, size_t m, size_t type_size, void (f_output)(void*))
 {
