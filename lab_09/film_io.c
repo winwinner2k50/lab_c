@@ -8,17 +8,17 @@
 
 int films_comparator_name(film a, film b)
 {
-    return strcmp(a.name, b.name) < 0;
+    return strcmp(a.name, b.name);
 }
 
 int films_comparator_title(film a, film b)
 {
-    return strcmp(a.title, b.title) < 0;
+    return strcmp(a.title, b.title);
 }
 
 int films_comparator_year(film a, film b)
 {
-    return a.year < b.year;
+    return a.year - b.year;
 }
 
 void str_init(char *str) {
@@ -105,9 +105,14 @@ int films_input_file(film **a, size_t *n, char file_name[], int (comparator)(fil
     fclose(f);
 }
 
+void film_output(film a)
+{
+    printf("%s %s %d\n", a.name, a.title, a.year);
+}
+
 void films_output(film *a, size_t n)
 {
     for (size_t i = 0; i < n; i++)
-        printf("%s %s %d\n", a[i].name, a[i].title, a[i].year);
+        film_output(a[i]);
 }
 

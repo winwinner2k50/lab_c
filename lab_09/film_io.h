@@ -11,3 +11,5 @@ int films_comparator_year(film a, film b);
 int films_comparator_title(film a, film b);
 
 int films_comparator_name(film a, film b);
+
+void film_output(film a);
